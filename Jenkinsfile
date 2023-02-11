@@ -2,6 +2,7 @@ pipeline{
     agent any
     triggers{
         pollSCM('* * * * *')
+
     }
     stages{
         stage("compile"){
@@ -23,6 +24,16 @@ pipeline{
                     reportName: "JaCoCo Report"
                 ])
                 sh "./gradlew jacocoTestCoverageVerification"
+            }
+        }
+        stage("Package"){
+            steps{
+                sh "./gradlew build"
+            }
+        }
+        stage("Docker build"){
+            steps{
+                sh "docker build -t sanixsandel/calculator ."
             }
         }
     }
